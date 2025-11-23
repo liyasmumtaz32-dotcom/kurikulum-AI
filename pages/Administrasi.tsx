@@ -57,6 +57,16 @@ const Administrasi: React.FC<AdministrasiProps> = ({ setupData, addDocuments, do
   };
 
   const handleDownload = (doc: GeneratedDocument) => {
+    // KOP SURAT
+    const kopSurat = `
+      <div style="text-align: center; font-family: 'Times New Roman', serif; margin-bottom: 20px; border-bottom: 3px double black; padding-bottom: 10px;">
+        <h3 style="margin:0; font-size: 14pt; font-weight: bold;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL GHOZALI</h3>
+        <h2 style="margin:0; font-size: 16pt; font-weight: bold;">SEKOLAH MENENGAH ATAS (SMA) ISLAM AL GHOZALI</h2>
+        <p style="margin:0; font-size: 11pt;">Jl. Permata No. 19 Curug Gunungsindur Kab. Bogor 16340</p>
+        <p style="margin:0; font-size: 11pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+      </div>
+    `;
+
     const fullHtml = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head>
@@ -70,7 +80,8 @@ const Administrasi: React.FC<AdministrasiProps> = ({ setupData, addDocuments, do
         </style>
       </head>
       <body>
-        <h2 style="text-align:center">${doc.title}</h2>
+        ${kopSurat}
+        <h3 style="text-align:center">${doc.title}</h3>
         <p style="text-align:center">${doc.setupData.mapel} - Kelas ${doc.setupData.kelas}</p>
         <hr>
         ${doc.content}

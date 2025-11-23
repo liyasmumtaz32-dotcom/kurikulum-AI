@@ -16,9 +16,9 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
   const mapelLower = mapel.toLowerCase();
   
   if (mapelLower.includes('inggris') || mapelLower.includes('english')) {
-    languageInstruction = "PERHATIAN KHUSUS: Karena ini mapel BAHASA INGGRIS, maka Naskah Soal, Bacaan (Reading Text), dan Opsi Jawaban HARUS DALAM BAHASA INGGRIS sepenuhnya. Judul bagian boleh Bahasa Indonesia.";
+    languageInstruction = "PERHATIAN KHUSUS: Karena ini mapel BAHASA INGGRIS, maka Naskah Soal, Bacaan (Reading Text), dan Opsi Jawaban HARUS DALAM BAHASA INGGRIS sepenuhnya. Instruksi pengerjaan boleh dalam Bahasa Indonesia.";
   } else if (mapelLower.includes('arab')) {
-    languageInstruction = "PERHATIAN KHUSUS: Karena ini mapel BAHASA ARAB, maka Naskah Soal dan Materi HARUS DALAM BAHASA ARAB (Gunakan huruf Arab/Hijaiyah yang valid). Sertakan harakat jika diperlukan untuk tingkat pemula.";
+    languageInstruction = "PERHATIAN KHUSUS: Karena ini mapel BAHASA ARAB, maka Naskah Soal dan Materi HARUS DALAM BAHASA ARAB (Gunakan huruf Arab/Hijaiyah yang valid). Pastikan teks Arab terbaca dengan baik (RTL).";
   } else if (mapelLower.includes('sunda')) {
     languageInstruction = "PERHATIAN KHUSUS: Karena ini mapel BAHASA SUNDA, maka Naskah Soal dan Materi HARUS DALAM BAHASA SUNDA yang baik dan benar (Sesuai Undak Usuk Basa).";
   } else if (mapelLower.includes('jawa')) {
@@ -30,10 +30,11 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
   if (['matematika', 'fisika', 'kimia', 'ipa', 'sains'].some(m => mapelLower.includes(m))) {
     mathInstruction = `
       8. FORMAT MATEMATIKA & SAINS (WAJIB):
-         - JANGAN gunakan format LaTeX (seperti $x^2$ atau \\frac).
-         - Gunakan tag HTML <sup> untuk pangkat/superscript. Contoh: x kuadrat ditulis "x<sup>2</sup>", derajat ditulis "30<sup>o</sup>".
-         - Gunakan tag HTML <sub> untuk indeks/subscript. Contoh: "H<sub>2</sub>O", "x<sub>1</sub>".
-         - Gunakan simbol HTML standar untuk operasi matematika (&times; untuk kali, &divide; untuk bagi, &plusmn; untuk kurang lebih).
+         - JANGAN gunakan format LaTeX (seperti $x^2$ atau \\frac). Format ini TIDAK BISA dibaca di Word.
+         - GUNAKAN tag HTML <sup> untuk pangkat/superscript. Contoh: x kuadrat ditulis "x<sup>2</sup>", derajat ditulis "30<sup>o</sup>".
+         - GUNAKAN tag HTML <sub> untuk indeks/subscript. Contoh: "H<sub>2</sub>O", "x<sub>1</sub>".
+         - Gunakan simbol HTML standar untuk operasi matematika (&times; untuk kali, &divide; untuk bagi, &plusmn; untuk kurang lebih, &radic; untuk akar).
+         - Pastikan rumus menyatu dengan kalimat secara rapi.
     `;
   }
 
@@ -109,7 +110,13 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
       prompt = `
         ${commonContext}
         Tugas: Buat "Kisi-kisi Soal" yang lengkap dalam format HTML.
-        ${extraPrompt ? `Ikuti konfigurasi berikut: ${extraPrompt}` : `Buat minimal 5-10 indikator yang mencakup materi "${materi}".`}
+        
+        KONFIGURASI JUMLAH & JENIS SOAL:
+        ${extraPrompt ? extraPrompt : `Buat minimal 5-10 indikator yang mencakup materi "${materi}".`}
+        
+        Instruksi:
+        - Pecah indikator sesuai jumlah PG, PG TKA, Uraian, dan Uraian TKA yang diminta.
+        - TKA = Tes Kemampuan Akademik (Soal HOTS/Level C4-C6).
         
         Buat Tabel HTML dengan kolom:
         - No
@@ -119,8 +126,6 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
         - Level Kognitif (L1/L2/L3)
         - Bentuk Soal (PG/PG TKA/Uraian/Uraian TKA)
         - No Soal
-        
-        Pastikan indikator mencakup level kognitif tinggi untuk soal TKA.
       `;
       break;
 
@@ -128,18 +133,23 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
       prompt = `
         ${commonContext}
         Tugas: Buat "Naskah Soal" siap cetak dalam format HTML.
-        ${extraPrompt ? `Konfigurasi Soal: ${extraPrompt}` : "Jumlah: 10 Soal Pilihan Ganda (opsi A-E) dan 5 Soal Uraian."}
+        
+        KONFIGURASI JUMLAH & JENIS SOAL (WAJIB DIPATUHI):
+        ${extraPrompt ? extraPrompt : "Jumlah: 10 Soal Pilihan Ganda (opsi A-E) dan 5 Soal Uraian."}
         
         Panduan Khusus:
-        1. Jika mapel Bahasa (Inggris/Arab/Sunda), pastikan teks soal menggunakan bahasa tersebut dengan benar.
-        2. Soal TKA (Tes Kemampuan Akademik) harus bertipe HOTS (C4-C6).
-        3. Format Soal PG:
-           <p>1. Pertanyaan...</p>
-           <ol type="A" style="margin-left: 20px;">
+        1. Pisahkan bagian "A. PILIHAN GANDA (REGULER)", "B. PILIHAN GANDA TKA (HOTS)", "C. URAIAN (REGULER)", dan "D. URAIAN TKA (HOTS)".
+        2. Jika mapel Bahasa (Inggris/Arab/Sunda), pastikan teks soal menggunakan bahasa tersebut dengan benar.
+        3. Soal TKA harus lebih kompleks, menuntut analisis, atau studi kasus.
+        
+        Format Soal PG:
+        <p>1. Pertanyaan...</p>
+        <ol type="A" style="margin-left: 20px;">
              <li>Opsi A</li>
              <li>Opsi B...</li>
-           </ol>
-        4. Format Soal Uraian: Gunakan nomor angka.
+        </ol>
+        
+        Format Soal Uraian: Gunakan nomor angka.
       `;
       break;
 
@@ -150,10 +160,10 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
         ${extraPrompt ? `Sesuaikan dengan konfigurasi soal: ${extraPrompt}` : ""}
         
         Format:
-        <h3>A. Pilihan Ganda (Reguler & TKA)</h3>
-        Buat tabel: No Soal | Kunci | Pembahasan.
+        <h3>A. KUNCI JAWABAN PILIHAN GANDA (Reguler & TKA)</h3>
+        Buat tabel: No Soal | Kunci | Pembahasan Singkat.
         
-        <h3>B. Uraian (Reguler & TKA)</h3>
+        <h3>B. KUNCI JAWABAN URAIAN (Reguler & TKA)</h3>
         Buat tabel: No Soal | Jawaban Ideal | Pedoman Penskoran.
       `;
       break;
@@ -179,7 +189,11 @@ export const generateDocumentContent = async (type: DocType, data: SetupData, ex
         Tugas: Buat "Rubrik Penilaian dan Pedoman Penskoran" dalam format HTML.
         ${extraPrompt ? `Sesuaikan pembobotan dengan jumlah soal: ${extraPrompt}` : ""}
         
-        Buat tabel Skema Penilaian untuk PG dan Uraian.
+        Instruksi:
+        - Tentukan bobot untuk PG Reguler vs PG TKA (misal TKA bobot lebih tinggi).
+        - Tentukan skor untuk Uraian.
+        
+        Buat tabel Skema Penilaian.
         Sertakan Rumus Perhitungan Nilai Akhir (NA).
       `;
       break;

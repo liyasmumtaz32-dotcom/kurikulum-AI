@@ -19,6 +19,16 @@ const Documents: React.FC<DocumentsProps> = ({ documents }) => {
   );
 
   const handleDownload = (doc: GeneratedDocument) => {
+    // KOP SURAT
+    const kopSurat = `
+      <div style="text-align: center; font-family: 'Times New Roman', serif; margin-bottom: 20px; border-bottom: 3px double black; padding-bottom: 10px;">
+        <h3 style="margin:0; font-size: 14pt; font-weight: bold;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL GHOZALI</h3>
+        <h2 style="margin:0; font-size: 16pt; font-weight: bold;">SEKOLAH MENENGAH ATAS (SMA) ISLAM AL GHOZALI</h2>
+        <p style="margin:0; font-size: 11pt;">Jl. Permata No. 19 Curug Gunungsindur Kab. Bogor 16340</p>
+        <p style="margin:0; font-size: 11pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+      </div>
+    `;
+
     // Construct a full HTML document that Word can interpret nicely
     const fullHtml = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -31,12 +41,12 @@ const Documents: React.FC<DocumentsProps> = ({ documents }) => {
           table { border-collapse: collapse; width: 100%; margin: 15px 0; }
           th, td { border: 1px solid #000; padding: 5px 10px; text-align: left; vertical-align: top; }
           th { background-color: #f2f2f2; font-weight: bold; }
-          .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #000; padding-bottom: 10px; }
           p { margin-bottom: 10px; }
         </style>
       </head>
       <body>
-        <div class="header">
+        ${kopSurat}
+        <div style="text-align: center; margin-bottom: 20px;">
           <h2>${doc.title}</h2>
           <p>${doc.setupData.mapel} - Kelas ${doc.setupData.kelas}</p>
           <p>Materi: ${doc.setupData.materi}</p>

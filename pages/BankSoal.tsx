@@ -87,6 +87,16 @@ const BankSoal: React.FC<BankSoalProps> = ({ setupData, addDocuments, documents 
   };
 
   const handleDownload = (doc: GeneratedDocument) => {
+    // KOP SURAT
+    const kopSurat = `
+      <div style="text-align: center; font-family: 'Times New Roman', serif; margin-bottom: 20px; border-bottom: 3px double black; padding-bottom: 10px;">
+        <h3 style="margin:0; font-size: 14pt; font-weight: bold;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL GHOZALI</h3>
+        <h2 style="margin:0; font-size: 16pt; font-weight: bold;">SEKOLAH MENENGAH ATAS (SMA) ISLAM AL GHOZALI</h2>
+        <p style="margin:0; font-size: 11pt;">Jl. Permata No. 19 Curug Gunungsindur Kab. Bogor 16340</p>
+        <p style="margin:0; font-size: 11pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+      </div>
+    `;
+
     const fullHtml = `
       <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
       <head>
@@ -97,11 +107,13 @@ const BankSoal: React.FC<BankSoalProps> = ({ setupData, addDocuments, documents 
           table { border-collapse: collapse; width: 100%; margin: 15px 0; }
           th, td { border: 1px solid #000; padding: 5px; }
           th { background-color: #f0f0f0; font-weight: bold; }
+          h1, h2, h3 { color: #000; }
         </style>
       </head>
       <body>
-        <h2 style="text-align:center">${doc.title}</h2>
-        <p style="text-align:center">${doc.setupData.mapel} - Kelas ${doc.setupData.kelas}</p>
+        ${kopSurat}
+        <h3 style="text-align:center; text-transform:uppercase; margin-top:0;">${doc.title}</h3>
+        <p style="text-align:center; font-weight:bold;">Mata Pelajaran: ${doc.setupData.mapel} | Kelas: ${doc.setupData.kelas}</p>
         <hr>
         ${doc.content}
       </body>
